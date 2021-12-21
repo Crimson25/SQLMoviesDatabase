@@ -1,0 +1,245 @@
+DROP TABLE IF EXISTS [Movies];
+DROP TABLE IF EXISTS [Company];
+DROP TABLE IF EXISTS [User];
+DROP TABLE IF EXISTS [Genre];
+DROP TABLE IF EXISTS [Relation];
+DROP TABLE IF EXISTS [Watched];
+DROP TABLE IF EXISTS [DistributedBy];
+
+CREATE TABLE Movies(
+Title NVARCHAR(24) NOT NULL,
+YearMade NUMERIC(4,0) NOT NULL,
+Runtime INTEGER NOT NULL,
+Director NVARCHAR(24) NOT NULL,
+Lead NVARCHAR(24),
+Rating NUMERIC(2, 1) NOT NULL,
+MovieID INTEGER PRIMARY KEY AUTOINCREMENT,
+CompanyID INTEGER NOT NULL,
+GenreID INTEGER NOT NULL,
+CONSTRAINT fk_genre_movies FOREIGN KEY (GenreID) REFERENCES Genre (GenreID),
+CONSTRAINT fk_company_movies FOREIGN KEY (CompanyID) REFERENCES Company (CompanyID)
+);
+
+CREATE TABLE Company(
+Name NVARCHAR(24) NOT NULL,
+CompanyID INTEGER PRIMARY KEY AUTOINCREMENT
+);
+
+CREATE TABLE User(
+StartYear INTEGER NOT NULL,
+FirstName NVARCHAR(24) NOT NULL,
+LastName NVARCHAR(24) NOT NULL,
+UserID INTEGER PRIMARY KEY AUTOINCREMENT,
+Age INTEGER NOT NULL
+);
+
+CREATE TABLE Genre(
+Name NVARCHAR(24) NOT NULL,
+GenreID INTEGER PRIMARY KEY AUTOINCREMENT
+);
+
+CREATE TABLE Relation(
+GenreID INTEGER NOT NULL,
+CONSTRAINT fk_genre_relation FOREIGN KEY (GenreID) REFERENCES Genre (GenreID)
+);
+
+CREATE TABLE Watched(
+MovieID INTEGER NOT NULL,
+UserID INTEGER NOT NULL,
+CONSTRAINT fk_movies_watched FOREIGN KEY (MovieID) REFERENCES Movies (MovieID),
+CONSTRAINT fk_user_watched FOREIGN KEY (UserID) REFERENCES User (UserID)
+);
+
+CREATE TABLE DistributedBy(
+MovieID INTEGER NOT NULL,
+CompanyID INTEGER NOT NULL,
+CONSTRAINT fk_movies_distributedby FOREIGN KEY (MovieID) REFERENCES Movies (MovieID),
+CONSTRAINT fk_company_distributedby FOREIGN KEY (CompanyID) REFERENCES Company (CompanyID)
+);
+
+CREATE INDEX IFK_MovieGenreID ON Movies (GenreID);
+CREATE INDEX IFK_MovieCompanyID ON Movies (CompanyID);
+CREATE INDEX IFK_RelationGenreID ON Relation (GenreID);
+CREATE INDEX IFK_WatchedMovieID ON Watched (MovieID);
+CREATE INDEX IFK_WatchedUserID ON Watched (UserID);
+CREATE INDEX IFK_DistributedByCompanyID ON DistributedBy (CompanyID);
+CREATE INDEX IFK_DistributedByMovieID ON DistributedBy (MovieID);
+
+INSERT INTO Genre (Name) VALUES ('Action');
+INSERT INTO Genre (Name) VALUES ('Comedy');
+INSERT INTO Genre (Name) VALUES ('Drama');
+INSERT INTO Genre (Name) VALUES ('Fantasy');
+INSERT INTO Genre (Name) VALUES ('Horror');
+INSERT INTO Genre (Name) VALUES ('Mystery');
+INSERT INTO Genre (Name) VALUES ('Romance');
+INSERT INTO Genre (Name) VALUES ('Thriller');
+INSERT INTO Genre (Name) VALUES ('Western');
+INSERT INTO Genre (Name) VALUES ('Science Fiction');
+
+
+
+INSERT INTO Company (Name) VALUES ('MGM');
+INSERT INTO Company (Name) VALUES ('20th Century Fox');
+INSERT INTO Company (Name) VALUES ('Gramercy Pictures');
+INSERT INTO Company (Name) VALUES ('New Line Cinema');
+INSERT INTO Company (Name) VALUES ('Warner Bros');
+INSERT INTO Company (Name) VALUES ('Paramount Pictures');
+INSERT INTO Company (Name) VALUES ('EMI Films');
+INSERT INTO Company (Name) VALUES ('United Artists');
+INSERT INTO Company (Name) VALUES ('RKO Radio Pictures');
+INSERT INTO Company (Name) VALUES ('Parufamet');
+INSERT INTO Company (Name) VALUES ('Sony');
+INSERT INTO Company (Name) VALUES ('Walt Disney');
+INSERT INTO Company (Name) VALUES ('Summit');
+
+
+
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('2001: A Space Odyssey',1968, 164, 8.3, 'Kubrick', 1, 10);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('Star Wars: A New Hope', 1977, 125, 8.6, 'Lucas', 2, 4);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('The Big Lebowski', 1998, 119, 8.1, 'Coen', 3, 9);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('LOTR: The Two Towers', 2002, 223, 8.7, 'Jackson', 4, 4);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('CasaBlanca', 1942, 102, 8.5, 'Curtiz', 5, 7);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('The Big Short', 2015, 130, 7.8, 'Mckay', 6, 3);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('Monty Python', 1975, 92, 8.2, 'Gilliam', 7, 2);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('The Magnificent Seven', 1960, 128, 7.7, 'Sturges', 8, 9);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('IT', 2017, 135, 7.3, 'Muschietti', 5, 5);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('The Godfather', 1972, 178, 9.2, 'Coppola', 6, 8);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('Citizen Kane', 1941, 119, 8.3, 'Welles', 9, 10);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('Metropolis', 1927, 153, 8.3, 'Lang', 10, 10);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, Lead, CompanyID, GenreID) VALUES ('Step Brothers', 2008, 106, 6.8, 'McKay', 'Ferrell', 11, 2);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('Frozen', 2013, 109, 7.4, 'Buck', 12, 4);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('Tangled', 2010, 100, 7.4, 'Greno', 12, 4);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, Lead, CompanyID, GenreID) VALUES ('Deadpool', 2016, 109, 8.0, 'Miller', 'Reynolds', 2, 1);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, Lead, CompanyID, GenreID) VALUES ('Captain America', 2016, 124, 8.0, 'Johnston', 'Evans', 6, 1);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, Lead, CompanyID, GenreID) VALUES ('Dark Knight', 2008, 152, 9.0, 'Nolan', 'Bale', 5, 8);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, Lead, CompanyID, GenreID) VALUES ('Baby Driver', 2017, 115, 7.6, 'Wright', 'Elgort', 11, 1);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('22 Jump Street', 2014, 112, 7.0, 'Lord', 1, 2);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, Lead, CompanyID, GenreID) VALUES ('The Notebook', 2004, 124, 7.8, 'Cassavetes', 'Gosling', 4, 7);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, Lead, CompanyID, GenreID) VALUES ('Enders Game', 2013, 114, 6.6, 'Hood', 'Butterfield', 13, 1);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, Lead, CompanyID, GenreID) VALUES ('Ready Player One', 2018, 139, 7.5, 'Spielberg', 'Sheridan', 5, 1);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, Lead, CompanyID, GenreID) VALUES ('Blade Runner', 1982, 117, 8.1, 'Scott', 'Ford', 5, 10);
+INSERT INTO Movies (Title, YearMade, Runtime, Rating, Director, CompanyID, GenreID) VALUES ('Toy Story', 1995, 81, 8.3, 'Lasseter', 12, 4);
+
+
+
+INSERT INTO User (StartYear, FirstName, LastName, Age) VALUES (2021, 'Andrew', 'Krause', 19);
+INSERT INTO User (StartYear, FirstName, LastName, Age) VALUES (1984, 'Anthony', 'Musbach', 55);
+INSERT INTO User (StartYear, FirstName, LastName, Age) VALUES (2016, 'Colin', 'Fitzpatrick', 21);
+INSERT INTO User (StartYear, FirstName, LastName, Age) VALUES (2013, 'Eli', 'Hefen', 19);
+INSERT INTO User (StartYear, FirstName, LastName, Age) VALUES (2002, 'Kanye', 'West', 40);
+INSERT INTO User (StartYear, FirstName, LastName, Age) VALUES (2008, 'John', 'Cornwell', 20);
+INSERT INTO User (StartYear, FirstName, LastName, Age) VALUES (1999, 'Derrick', 'Morgan', 34);
+INSERT INTO User (StartYear, FirstName, LastName, Age) VALUES (1993, 'Aaron', 'Hotchner', 42);
+INSERT INTO User (StartYear, FirstName, LastName, Age) VALUES (2005, 'Spencer', 'Reid', 27);
+INSERT INTO User (StartYear, FirstName, LastName, Age) VALUES (2012, 'Brendan', 'Fitzpatrick', 18);
+
+
+
+INSERT INTO Relation(GenreID) VALUES (1);
+INSERT INTO Relation(GenreID) VALUES (2);
+INSERT INTO Relation(GenreID) VALUES (3);
+INSERT INTO Relation(GenreID) VALUES (4);
+INSERT INTO Relation(GenreID) VALUES (5);
+INSERT INTO Relation(GenreID) VALUES (6);
+INSERT INTO Relation(GenreID) VALUES (7);
+INSERT INTO Relation(GenreID) VALUES (8);
+INSERT INTO Relation(GenreID) VALUES (9);
+INSERT INTO Relation(GenreID) VALUES (10);
+
+
+
+INSERT INTO Watched(UserID, MovieID) VALUES (1,1);
+INSERT INTO Watched(UserID, MovieID) VALUES (1,4);
+INSERT INTO Watched(UserID, MovieID) VALUES (1,23);
+INSERT INTO Watched(UserID, MovieID) VALUES (1,14);
+INSERT INTO Watched(UserID, MovieID) VALUES (2,14);
+INSERT INTO Watched(UserID, MovieID) VALUES (2,10);
+INSERT INTO Watched(UserID, MovieID) VALUES (3,6);
+INSERT INTO Watched(UserID, MovieID) VALUES (3,7);
+INSERT INTO Watched(UserID, MovieID) VALUES (3,9);
+INSERT INTO Watched(UserID, MovieID) VALUES (3,25);
+INSERT INTO Watched(UserID, MovieID) VALUES (3,21);
+INSERT INTO Watched(UserID, MovieID) VALUES (3,17);
+INSERT INTO Watched(UserID, MovieID) VALUES (4,16);
+INSERT INTO Watched(UserID, MovieID) VALUES (5,2);
+INSERT INTO Watched(UserID, MovieID) VALUES (5,5);
+INSERT INTO Watched(UserID, MovieID) VALUES (5,9);
+INSERT INTO Watched(UserID, MovieID) VALUES (5,11);
+INSERT INTO Watched(UserID, MovieID) VALUES (5,12);
+INSERT INTO Watched(UserID, MovieID) VALUES (5,22);
+INSERT INTO Watched(UserID, MovieID) VALUES (5,24);
+INSERT INTO Watched(UserID, MovieID) VALUES (5,25);
+INSERT INTO Watched(UserID, MovieID) VALUES (6,3);
+INSERT INTO Watched(UserID, MovieID) VALUES (6,8);
+INSERT INTO Watched(UserID, MovieID) VALUES (6,16);
+INSERT INTO Watched(UserID, MovieID) VALUES (6,18);
+INSERT INTO Watched(UserID, MovieID) VALUES (6,19);
+INSERT INTO Watched(UserID, MovieID) VALUES (6,21);
+INSERT INTO Watched(UserID, MovieID) VALUES (7,3);
+INSERT INTO Watched(UserID, MovieID) VALUES (7,7);
+INSERT INTO Watched(UserID, MovieID) VALUES (7,10);
+INSERT INTO Watched(UserID, MovieID) VALUES (7,11);
+INSERT INTO Watched(UserID, MovieID) VALUES (7,13);
+INSERT INTO Watched(UserID, MovieID) VALUES (7,14);
+INSERT INTO Watched(UserID, MovieID) VALUES (7,15);
+INSERT INTO Watched(UserID, MovieID) VALUES (7,17);
+INSERT INTO Watched(UserID, MovieID) VALUES (7,18);
+INSERT INTO Watched(UserID, MovieID) VALUES (7,21);
+INSERT INTO Watched(UserID, MovieID) VALUES (8,2);
+INSERT INTO Watched(UserID, MovieID) VALUES (8,6);
+INSERT INTO Watched(UserID, MovieID) VALUES (8,8);
+INSERT INTO Watched(UserID, MovieID) VALUES (9,5);
+INSERT INTO Watched(UserID, MovieID) VALUES (9,14);
+INSERT INTO Watched(UserID, MovieID) VALUES (9,16);
+INSERT INTO Watched(UserID, MovieID) VALUES (9,19);
+INSERT INTO Watched(UserID, MovieID) VALUES (9,23);
+INSERT INTO Watched(UserID, MovieID) VALUES (10,1);
+INSERT INTO Watched(UserID, MovieID) VALUES (10,3);
+INSERT INTO Watched(UserID, MovieID) VALUES (10,7);
+INSERT INTO Watched(UserID, MovieID) VALUES (10,10);
+INSERT INTO Watched(UserID, MovieID) VALUES (10,13);
+INSERT INTO Watched(UserID, MovieID) VALUES (10,18);
+INSERT INTO Watched(UserID, MovieID) VALUES (10,25);
+
+
+
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (1,1);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (2,2);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (3,3);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (4,4);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (5,5);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (6,6);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (7,7);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (8,8);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (5,9);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (6,10);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (9,11);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (10,12);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (11,13);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (12,14);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (12,15);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (2,16);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (6,17);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (5,18);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (11,19);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (1,20);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (4,21);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (13,22);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (5,23);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (5,24);
+INSERT INTO DistributedBy(CompanyID, MovieID) VALUES (12,25);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
